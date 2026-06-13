@@ -210,8 +210,8 @@
       <div class="panel-title">3D Mesh & Save</div>
       <div class="panel-title" style="font-size: 10px; margin-bottom: 4px; color:var(--text-sub)">3D Shape Profile</div>
       <div class="seg-ctrl" id="meshTypeSeg">
-        <button class="active" data-v="plane"><i class="ti ti-square" style="font-size:11px; margin-right:3px"></i>Plane</button>
-        <button data-v="sphere"><i class="ti ti-circle-dot" style="font-size:11px; margin-right:3px"></i>Sphere</button>
+        <button data-v="plane"><i class="ti ti-square" style="font-size:11px; margin-right:3px"></i>Plane</button>
+        <button class="active" data-v="sphere"><i class="ti ti-circle-dot" style="font-size:11px; margin-right:3px"></i>Sphere</button>
       </div>
 
       <div class="ctrl-row">
@@ -232,7 +232,7 @@
   </div>
 
   <div class="hero" id="threeWrap">
-    <span class="hero-label" id="meshLabel">3D Alpha Preview</span>
+    <span class="hero-label" id="meshLabel">3D Displaced sphere</span>
     <div class="toggle-row">
       <button id="wireBtn" title="Wireframe Mesh"><i class="ti ti-grid-dots"></i></button>
       <button id="rotBtn" title="Auto Turn"><i class="ti ti-rotate"></i></button>
@@ -250,7 +250,7 @@
 const $ = id => document.getElementById(id);
 let srcImg = null, srcW = 0, srcH = 0;
 let channel = 'luminance';
-let currentMeshType = 'plane'; 
+let currentMeshType = 'sphere'; 
 const PROC_RES = 512; 
 
 const meshSettings = {
@@ -296,7 +296,6 @@ segSetup('meshTypeSeg', v=>{
   applyDisplacement();
 });
 
-// ดึงการอัปเดต UI และ Thumbnail ออกมาเป็นฟังก์ชันกลางเพื่อให้โหลดรูปเริ่มต้นเรียกใช้ได้ด้วย
 function handleImageProcessed(img, w, h) {
   srcImg = img; srcW = w; srcH = h;
   
@@ -489,15 +488,15 @@ $('resetBtn').addEventListener('click',()=>{
   meshSettings.sphere.disp = 10;
   meshSettings.sphere.seg = 512;
   
-  currentMeshType = 'plane';
-  $('dispScale').value = meshSettings.plane.disp;
-  $('dispScaleV').textContent = meshSettings.plane.disp;
-  $('dispSeg').value = meshSettings.plane.seg;
-  $('dispSegV').textContent = meshSettings.plane.seg;
+  currentMeshType = 'sphere';
+  $('dispScale').value = meshSettings.sphere.disp;
+  $('dispScaleV').textContent = meshSettings.sphere.disp;
+  $('dispSeg').value = meshSettings.sphere.seg;
+  $('dispSegV').textContent = meshSettings.sphere.seg;
 
   document.querySelectorAll('#meshTypeSeg button').forEach(b=>b.classList.remove('active'));
-  document.querySelector('#meshTypeSeg button[data-v="plane"]').classList.add('active');
-  $('meshLabel').textContent="3D Alpha Preview";
+  document.querySelector('#meshTypeSeg button[data-v="sphere"]').classList.add('active');
+  $('meshLabel').textContent="3D Displaced sphere";
   
   autoRotate = false;
   $('rotBtn').classList.remove('active');
@@ -673,18 +672,12 @@ function animate(){
   three.renderer.render(three.scene, three.camera);
 }
 
-// ฟังก์ชันดึงรูปภาพพื้นฐานจากเซิร์ฟเวอร์มาคำนวณอัตโนมัติ
 function loadDefaultImage() {
   const img = new Image();
-  
-  // เปิดโหมด CORS เพื่อปลดล็อกระบบรักษาความปลอดภัย Canvas บราวเซอร์จะไม่บล็อกพิกเซล
   img.crossOrigin = "anonymous"; 
-  
   img.onload = () => {
     handleImageProcessed(img, img.width, img.height);
   };
-  
-  // ระบุ Path ไปยังไฟล์ภาพที่อยู่ในโฟลเดอร์เดียวกันบนคลัง GitHub
   img.src = "./alpha_map.png"; 
 }
 
