@@ -1,2 +1,2 @@
-# Brush Alpha Gen
+# Brush Alpha Generator
 This is a 3D Alpha Map Generator web application designed for 3D sculpting artists. It instantly converts 2D images (such as logos, patterns, skin pores, or scales) into grayscale depth maps (Displacement Maps). These can be used directly as Brush Alphas/Textures for sculpting in programs like Blender, ZBrush, or other 3D software. The app also features a built-in, real-time 3D preview so you can see exactly how the texture deforms in 3D right on your browser.
