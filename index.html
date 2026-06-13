@@ -251,7 +251,10 @@ const $ = id => document.getElementById(id);
 let srcImg = null, srcW = 0, srcH = 0;
 let channel = 'luminance';
 let currentMeshType = 'sphere'; 
-const PROC_RES = 512; 
+const PROC_RES = 1024; 
+
+// ตัวแปรสำหรับจดจำชื่อไฟล์ที่ผู้ใช้อัปโหลดเข้ามา
+let uploadedFileName = "alpha"; 
 
 const meshSettings = {
   plane: { disp: 5, seg: 256 },
@@ -316,6 +319,15 @@ function handleImageProcessed(img, w, h) {
 
 function loadFile(f){
   if(!f) return;
+  
+  // แกะและบันทึกชื่อไฟล์ดั้งเดิมโดยตัดนามสกุลออก (.jpg, .png ฯลฯ)
+  const lastDotIndex = f.name.lastIndexOf('.');
+  if (lastDotIndex !== -1) {
+    uploadedFileName = f.name.substring(0, lastDotIndex);
+  } else {
+    uploadedFileName = f.name;
+  }
+
   const url=URL.createObjectURL(f);
   const img=new Image();
   img.onload=()=>{
@@ -473,15 +485,21 @@ function render(){
   applyDisplacement();
 }
 
+// จุดแก้ไขหลัก: ดึงชื่อไฟล์เดิมมาประกอบเข้ากับคำว่า _bap ในการดาวน์โหลด
 $('exportPNG').addEventListener('click',()=>{
   const oc=$('outCanvas'); if(!oc.width) return;
-  const a=document.createElement('a'); a.download='alpha_smart_fade.png'; a.href=oc.toDataURL('image/png'); a.click();
+  const a=document.createElement('a'); 
+  a.download = `${uploadedFileName}_bap.png`; 
+  a.href=oc.toDataURL('image/png'); 
+  a.click();
 });
 
 $('resetBtn').addEventListener('click',()=>{
   document.querySelectorAll('input[type=range]').forEach(el=>{el.value=el.defaultValue});
   ['brightness','contrast'].forEach(id=>$(id+'V').textContent='0');
   $('gammaV').textContent='1.0'; $('blurV').textContent='0'; $('objectFadeV').textContent='0';
+  
+  uploadedFileName = "alpha"; // รีเซ็ตชื่อกลับเป็นค่าเริ่มต้น
   
   meshSettings.plane.disp = 5;
   meshSettings.plane.seg = 256;
