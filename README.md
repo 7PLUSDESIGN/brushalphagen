@@ -1,2 +1,2 @@
 # alphamapeditor
-Alpha map gen
+Alpha map editor
