@@ -1,2 +1,2 @@
-# 7plusalphamapgen
+# alphamapeditor
 Alpha map gen
